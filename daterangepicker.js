@@ -55,6 +55,7 @@
         this.autoUpdateInput = true;
         this.alwaysShowCalendars = false;
         this.ranges = {};
+        this.pickingEndDate = false;
 
         this.opens = 'right';
         if (this.element.hasClass('pull-right'))
@@ -479,6 +480,12 @@
                 this.updateElement();
 
             this.updateMonthsInView();
+
+            // if (this.startDate !== null && this.endDate === null) {
+            //   let v_max_date = this.maxDate;
+            //   this.setEndDate(v_max_date);
+              this.pickingEndDate = true;
+            // }
         },
 
         setEndDate: function(endDate) {
@@ -511,6 +518,7 @@
                 this.updateElement();
 
             this.updateMonthsInView();
+            this.pickingEndDate = false;
         },
 
         isInvalidDate: function() {
@@ -1305,7 +1313,8 @@
             // * if one of the inputs above the calendars was focused, cancel that manual input
             //
 
-            if (this.endDate || date.isBefore(this.startDate, 'day')) { //picking start
+            // if ((this.endDate || date.isBefore(this.startDate, 'day')) && !this.pickingEndDate) { //picking start
+            if ((this.endDate && !this.pickingEndDate ) || date.isBefore(this.startDate, 'day') ) { //picking start
                 if (this.timePicker) {
                     var hour = parseInt(this.container.find('.left .hourselect').val(), 10);
                     if (!this.timePicker24Hour) {
@@ -1322,7 +1331,7 @@
                     var second = this.timePickerSeconds ? parseInt(this.container.find('.left .secondselect').val(), 10) : 0;
                     date = date.clone().hour(hour).minute(minute).second(second);
                 }
-                this.endDate = null;
+                // this.endDate = null;
                 this.setStartDate(date.clone());
             } else if (!this.endDate && date.isBefore(this.startDate)) {
                 //special case: clicking the same date for start/end,
